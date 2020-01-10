@@ -5,7 +5,7 @@
 # Time:
 
 from ps1_partition import get_partitions
-import time
+import copy, time
 
 #================================
 # Part A: Transporting Space Cows
@@ -24,8 +24,22 @@ def load_cows(filename):
     Returns:
     a dictionary of cow name (string), weight (int) pairs
     """
-    # TODO: Your code here
-    pass
+    cowList = []
+    with open(filename) as f:
+        for line in f:
+            # remove \n at the end and form a tuple 
+            lineCopy = tuple(line.strip().split(','))
+            # print(lineCopy)
+            cowList.append(lineCopy)
+        f.close()
+    data = dict(cowList)
+    # conerting the weight value to integers
+    for key, value in data.items():
+        data[key] = int(value)
+    # print(data)
+    return data
+
+# load_cows('ps1_cow_data.txt')
 
 # Problem 2
 def greedy_cow_transport(cows,limit=10):
@@ -50,8 +64,26 @@ def greedy_cow_transport(cows,limit=10):
     transported on a particular trip and the overall list containing all the
     trips
     """
-    # TODO: Your code here
-    pass
+    mutable_cows = sorted(cows.items(), key=lambda v: v[1], reverse=True)
+    taken_cows = []
+    while len(mutable_cows)>0:
+        current_weight = 0
+        trip = []
+        for k, v in mutable_cows[:]:
+            # slicing so as to make copy of original list so as to modify it while iterating
+            # https://stackoverflow.com/questions/1207406/how-to-remove-items-from-a-list-while-iterating
+            if (current_weight+v) <= limit:
+                trip.append(k)
+                # print('Trip:',trip)
+                current_weight += v
+                # print('Current Weight',current_weight)
+                mutable_cows.remove((k,v))
+                # print('Remaining cows',mutable_cows)
+        taken_cows.append(trip)
+    print('Taken Cows:',taken_cows)
+    return taken_cows
+
+# greedy_cow_transport(load_cows('ps1_cow_data.txt'), limit=10)
 
 # Problem 3
 def brute_force_cow_transport(cows,limit=10):
@@ -75,9 +107,16 @@ def brute_force_cow_transport(cows,limit=10):
     transported on a particular trip and the overall list containing all the
     trips
     """
-    # TODO: Your code here
-    pass
+    partitions_list = sorted(get_partitions(cows), key=len)
+    
+    taken_cows = []
+
+    for item in partitions_list:
+        if sum
         
+
+brute_force_cow_transport(load_cows('ps1_cow_data.txt'), limit=10)
+
 # Problem 4
 def compare_cow_transport_algorithms():
     """
